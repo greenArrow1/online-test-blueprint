@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Object-Oriented JavaScript</title>
+  <script type="text/JavaScript" src="./js/data.js"></script>
+</head>
+
+<body id="body">
+  <section id="container">
+    <!-- <form id="group2">
+    </form> -->
+  </section>
+  <br />
+  <section id="buttonCont">
+
+  </section>
+  <section>
+    <h2>Add Question</h2>
+    <input type="text" id="add-question" name="add-question" />
+    <button onclick="add()">Add</button>
+    <br />
+    <!-- <h2>Add Answer</h2>
+    <input type="text" id="add-answer" /> -->
+  </section>
+</body>
+<script>
+  var counter = 0;
+  let questions = Array.from(data);
+  let div;
+  myFunc = (param) => {
+
+  }
+  add = () => {
+    let question = document.getElementById('add-question');
+    let target = question.value;
+    let obj = {
+      "id": "Q-1",
+      "title": target,
+      "type": "radiogroup",
+      "options": [
+        "NA",
+        "NA",
+        "NA",
+        "NA"
+      ]
+    }
+    data.push(obj);
+  }
+  next = (param) => {
+    questions = data.slice(counter, counter + 1);
+    let parent = document.getElementById('container');
+    let child = document.getElementById("container-div");
+    parent.removeChild(child);
+    if (counter == 1) {
+      let previousButton = document.createElement("button");
+      previousButton.setAttribute("id", "previousButton");
+      previousButton.addEventListener("click", previous);
+      document.getElementById('buttonCont').appendChild(previousButton).innerHTML = 'Previous';
+    }
+    for (let x of questions) {
+      div = document.createElement("div");
+      div.setAttribute("id", "container-div");
+      parent.appendChild(div);
+      let quesContainer = document.createElement("h2");
+      quesContainer.setAttribute("id", "h2");
+      document.getElementById('container-div').appendChild(quesContainer).innerHTML = x.title + '?';
+      switch (x.type) {
+        case 'radiogroup':
+          makeRadioInput(x);
+          break;
+        case 'dropdown':
+          makeDropdown(x);
+          break;
+        default:
+          break;
+      }
+    }
+    if (counter + 1 === data.length) {
+      document.getElementById('buttonCont').removeChild(document.getElementById("next-button"));
+      let submitBut = document.createElement("button");
+      submitBut.setAttribute("id", "submitBut");
+      submitBut.addEventListener("click", submit);
+      document.getElementById('buttonCont').appendChild(submitBut).innerHTML = 'Submit';
+    }
+    counter++;
+  }
+
+  previous = () => {
+    questions = data.slice(counter - 2, counter - 1);
+    let parent = document.getElementById('container');
+    let child = document.getElementById("container-div");
+    parent.removeChild(child);
+    for (let x of questions) {
+      div = document.createElement("div");
+      div.setAttribute("id", "container-div");
+      parent.appendChild(div);
+      let quesContainer = document.createElement("h2");
+      quesContainer.setAttribute("id", "h2");
+      document.getElementById('container-div').appendChild(quesContainer).innerHTML = x.title + '?';
+      switch (x.type) {
+        case 'radiogroup':
+          makeRadioInput(x);
+          break;
+        case 'dropdown':
+          makeDropdown(x);
+          break;
+        default:
+          break;
+      }
+    }
+    if (!document.getElementById('next-button')) {
+      let nextButton = document.createElement("button");
+      nextButton.setAttribute("id", "next-button");
+      nextButton.addEventListener("click", next);
+      document.getElementById('buttonCont').appendChild(nextButton).innerHTML = 'Next';
+      document.getElementById('buttonCont').removeChild(document.getElementById("submitBut"));
+    }
+    if (counter > 0)
+      counter--;
+    else
+      counter = 0;
+  }
+
+  submit = () => {
+    document.getElementById("container").innerHTML = "Successfully Submitted all answers.";
+    document.getElementById('buttonCont').removeChild(document.getElementById("previousButton"));
+    document.getElementById('buttonCont').removeChild(document.getElementById("submitBut"));
+  }
+
+  init = () => {
+    counter++;
+    questions.splice(1, questions.length);
+    for (let x of questions) {
+      let parent = document.getElementById('container');
+      let child = document.getElementById("container-div");
+      div = document.createElement("div");
+      div.setAttribute("id", "container-div");
+      parent.appendChild(div);
+      let quesContainer = document.createElement("h2");
+      document.getElementById('container-div').appendChild(quesContainer).innerHTML = x.title + '?';
+      switch (x.type) {
+        case 'radiogroup':
+          makeRadioInput(x);
+          break;
+        case 'dropdown':
+          makeDropdown(x);
+          break;
+        default:
+          break;
+      }
+    }
+    let nextButton = document.createElement("button");
+    nextButton.setAttribute("id", "next-button");
+    nextButton.addEventListener("click", next);
+    document.getElementById('buttonCont').appendChild(nextButton).innerHTML = 'Next';
+  }
+  makeRadioInput = (x) => {
+    x.options.forEach(y => {
+      let input = document.createElement("input");
+      input.setAttribute("type", "radio");
+      input.setAttribute("name", x.type);
+      input.addEventListener("click", myFunc(this));
+      div.appendChild(input);
+      let label = document.createElement('label');
+      div.appendChild(label);
+      label.innerHTML = y;
+    });
+  }
+
+  makeDropdown = (x) => {
+    let select = document.createElement("select");
+    x.options.forEach(y => {
+      let options = document.createElement("option");
+      options.setAttribute("value", y);
+      options.innerHTML = y;
+      div.appendChild(select);
+      select.appendChild(options);
+    });
+  }
+  init();
+
+</script>
+
+</html>
